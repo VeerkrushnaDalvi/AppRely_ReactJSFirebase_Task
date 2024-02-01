@@ -10,20 +10,20 @@ import {GoogleAuthProvider, getAuth, signInWithPopup, signInWithEmailAndPassword
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAxDc0_HYpI7DpQJszJeRU5tzXqNifs79E",
-  authDomain: "hip-wharf-386618.firebaseapp.com",
-  projectId: "hip-wharf-386618",
-  storageBucket: "hip-wharf-386618.appspot.com",
-  messagingSenderId: "997806278968",
-  appId: "1:997806278968:web:8698800631283bd1c659cd",
-  measurementId: "G-VQR296S4M3"
-  // apiKey: `${process.env.API_KEY}`,
-  // authDomain: `${process.env.AUTH_DOMAIN}`,
-  // projectId: `${process.env.PROJECT_ID}`,
-  // storageBucket: `${process.env.STORAGE_BUCKET}`,
-  // messagingSenderId: `${process.env.MSG_SENDER_ID}`,
-  // appId: `${process.env.APP_ID}`,
-  // measurementId: `${process.env.MEASUREMENT_ID}`,
+  // apiKey: "AIzaSyAxDc0_HYpI7DpQJszJeRU5tzXqNifs79E",
+  // authDomain: "hip-wharf-386618.firebaseapp.com",
+  // projectId: "hip-wharf-386618",
+  // storageBucket: "hip-wharf-386618.appspot.com",
+  // messagingSenderId: "997806278968",
+  // appId: "1:997806278968:web:8698800631283bd1c659cd",
+  // measurementId: "G-VQR296S4M3"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MSG_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -53,6 +53,7 @@ const signInWithGoogle = async () =>{
         });
         alert("Login success with authProvider: Google")
     }
+    
   }catch(err){
     console.error(err);
     alert(err);
