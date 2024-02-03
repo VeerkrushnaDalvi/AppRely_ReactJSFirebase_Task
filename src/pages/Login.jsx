@@ -7,14 +7,17 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
+  const IsLoggedIn = auth.currentUser;
   const navigate = useNavigate();
   useEffect(() => {
+    console.log(IsLoggedIn);
+    // console.log();
     if (loading) {
       // maybe trigger a loading screen
       return;
     }
-    if (user) navigate("/dashboard");
-  }, [user, loading]);
+    if (IsLoggedIn) navigate("/dashboard");
+  }, [user, loading, error]);
   return (
     <div className="login">
       <div className="login__container">

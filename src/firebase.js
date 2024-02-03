@@ -1,10 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+// import { useAuthState } from "react-firebase-hooks/auth";
 
 // New imports for authentication
 
-import {getFirestore, query, getDocs, collection, where, addDoc} from "@firebase/firestore"
-import {GoogleAuthProvider, getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut} from "firebase/auth"
+import { getFirestore, query, getDocs, collection, where, addDoc } from "@firebase/firestore"
+import { GoogleAuthProvider, getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth"
+
+
+import { useNavigate } from "react-router-dom";
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,6 +30,8 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
+
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -35,38 +41,41 @@ const googleProvider = new GoogleAuthProvider();
 
 
 
-const signInWithGoogle = async () =>{
-  try{
+const signInWithGoogle = async () => {
+  try {
     const res = await signInWithPopup(auth, googleProvider);
     console.log(auth);
     console.log(res);
-    const user_obj = res.user;
+    // const user_obj = res.user;
+    // console.log(user_obj);
+    const user_obj = auth.currentUser;
     console.log(user_obj);
-    const q = query(collection(db,"users"), where('uid', '==', user_obj.uid));
+    const q = query(collection(db, "Users"), where('uid', '==', user_obj.uid));
     const docs = await getDocs(q);
-    if(docs.docs.length === 0){
-        await addDoc(collection(db, "users"),{
-          uid:user_obj.uid,
-          name:user_obj.displayName,
-          authProvider:"google",
-          email:user_obj.email,
-        });
-        alert("Login success with authProvider: Google")
+    if (docs.docs.length === 0) {
+      await addDoc(collection(db, "Users"), {
+        uid: user_obj.uid,
+        name: user_obj.displayName,
+        authProvider: "google",
+        email: user_obj.email,
+      });
+      alert("Login success with authProvider: Google")
     }
-    
-  }catch(err){
+
+  } catch (err) {
     console.error(err);
     alert(err);
   }
 };
 
 
-const  logInWithEmailAndPassword = async (email, password) => {
-  try{
-    await signInWithEmailAndPassword(auth,email,password);
+const logInWithEmailAndPassword = async (email, password) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+
     alert("Login Success ")
-  } catch (err){
-    alert("Error while signin. \n May be your are not registered or may be invalid credentials ")
+  } catch (err) {
+    alert("Error while signin. \n May be your are not registered or may be invalid credentials \n "+ err.message)
     console.error(err);
   }
 };
@@ -76,10 +85,9 @@ const  logInWithEmailAndPassword = async (email, password) => {
 
 const registerWithEmailAndPassword = async (name, email, password) => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    const user_obj = res.user;
-    console.log(user_obj)
-    await addDoc(collection(db, "users"), {
+    await createUserWithEmailAndPassword(auth, email, password);
+    const user_obj = auth.currentUser;
+    await addDoc(collection(db, "Users"), {
       uid: user_obj.uid,
       name,
       authProvider: "local",
@@ -87,7 +95,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     });
     alert("Thank you for registeration")
   } catch (err) {
-    console.error(err,"hello saving error");
+    console.error(err, "hello saving error");
     alert(err.message);
   }
 };
@@ -106,11 +114,15 @@ const sendPasswordReset = async (email) => {
 
 
 
-const logout = () => {
-  signOut(auth);
-  alert("Logout Success")
+const Logout = async (navigate) => {
+  await signOut(auth);
+  navigate("/")
+  alert("Logout Success");
+
 };
 
 
 
-export {auth, db, signInWithGoogle, logInWithEmailAndPassword, registerWithEmailAndPassword, sendPasswordReset, logout};
+
+
+export { auth, db, signInWithGoogle, logInWithEmailAndPassword, registerWithEmailAndPassword, sendPasswordReset, Logout };
