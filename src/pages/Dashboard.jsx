@@ -1,28 +1,26 @@
+
+// importing all the required libraries
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { auth, db, Logout } from "../firebase";
-// import { Button} from "@mui/material";
-import { Form, Button, Container, Nav, Navbar, NavDropdown, InputGroup, ListGroup, Stack, Modal } from "react-bootstrap";
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Form, Button, Container, Nav, Navbar, InputGroup, ListGroup, Stack, Modal } from "react-bootstrap";
 import { query, collection, getDocs, where, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
-import "./Dashboard.css"; // You can create a separate CSS file for styling
+import { MdDelete, MdEdit } from "react-icons/md";
+import "./Dashboard.css"; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
 
 function Dashboard() {
+
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [name, setName] = useState("");
-
     const [todos, setTodos] = useState([]);
     const [todoHeading, settodoHeading] = useState('');
     const [todoDesc, settodoDesc] = useState('');
-    // const [newTodo, setNewTodo] = useState("");
     const [showEditModal, setShowEditModal] = useState(false);
-
     const [editedTodo, setEditedTodo] = useState({
         id: "",
         heading: "",
@@ -30,6 +28,7 @@ function Dashboard() {
     });
 
     const currentUser = auth.currentUser;
+
     useEffect(() => {
         // console.log(currentUser.uid);
         setUser(currentUser);
@@ -51,7 +50,8 @@ function Dashboard() {
     }, []);
 
 
-    // User name fetching for showing in the navbar from user database
+ 
+    // fetch user name function to show in the navbar as logged in status
 
     const fetchUserName = async (uid) => {
         try {
@@ -60,8 +60,6 @@ function Dashboard() {
             const data = doc.docs[0].data();
             console.log(data);
             setName(data.name);
-
-
 
         } catch (err) {
             console.error(err);
@@ -72,7 +70,7 @@ function Dashboard() {
 
 
 
-
+    // add the user created todo in the firestore collection 
     const addTodo = async () => {
         if (todoHeading.trim() !== "" && todoDesc.trim() !== "") {
             const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
@@ -90,22 +88,9 @@ function Dashboard() {
         }
     };
 
-    // const toggleTodo = async (todoId, completed) => {
-    //     const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
-    //     const todoDocRef = doc(userTodosCollection, todoId);
-    //     await updateDoc(todoDocRef, { completed: !completed });
-    //     const q = query(userTodosCollection);
-    //     const querySnapshot = await getDocs(q);
-    //     const todosData = querySnapshot.docs.map((doc) => ({
-    //         id: doc.id,
-    //         ...doc.data(),
-    //     }));
-    //     setTodos(todosData);
-    // };
+ 
 
-
-
-
+    //  handle edit button function
     const handleEdit = (todo) => {
         setEditedTodo({
             id: todo.id,
@@ -115,6 +100,8 @@ function Dashboard() {
         setShowEditModal(true);
     };
 
+
+    // handle edit chnage function which change the seEdited todo in previous one
     const handleEditChange = (e) => {
         setEditedTodo({
             ...editedTodo,
@@ -122,6 +109,10 @@ function Dashboard() {
         });
     };
 
+
+
+
+    // edittodo function which updates the firestore
     const editTodo = async () => {
         try {
             const userTodosCollection = collection(
@@ -161,7 +152,7 @@ function Dashboard() {
 
 
 
-
+    // delete todo handle function
     const deleteTodo = async (todoId) => {
         const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
         const todoDocRef = doc(userTodosCollection, todoId);
@@ -175,8 +166,11 @@ function Dashboard() {
         setTodos(todosData);
     };
 
+
+    // todo and dashboard(navbar) react coomponent
     return (
         <>
+        {/* Navbar */}
             <Navbar expand="lg" className="bg-body-secondary">
                 <Container fluid>
                     <Navbar.Brand href="#">Todo Application</Navbar.Brand>
@@ -190,15 +184,13 @@ function Dashboard() {
                             <InputGroup.Text id="basic-addon1"> <Navbar.Text>Hey 👋, @  {user && name}</Navbar.Text>  </InputGroup.Text>
 
                         </InputGroup>
-
-
-
                     </Nav>
 
                     <Button variant="outline-dark" onClick={() => Logout(navigate)}>Logout</Button>
                 </Container>
             </Navbar>
 
+            {/* todo input (heading and description) */}
             <div className="dashboard">
                 <Form>
                     <Form.Group className="mb-3" controlId="formBasicTodoName">
@@ -220,28 +212,9 @@ function Dashboard() {
                 </Form>
             </div>
 
-            {/* <div className="todos">
-                    
-                    <ul>
-                        {todos.map((todo) => (
-                            <li key={todo.id} className={todo.completed ? "completed" : ""}>
-                                <span >
-                                    {todo.heading}
-                                </span>
-                                <span >
-                                    {todo.description}
-                                </span>
-                                <Button variant="outline-danger" onClick={() => deleteTodo(todo.id)}>
-                                    Delete
-                                </Button>
-                            </li>
-                        ))}
-                    </ul>
-                </div> */}
+        
 
-
-
-
+            {/* Container used to show the todo list */}
             <Container className="mt-5">
                 <h2>Todo List</h2>
 
@@ -260,12 +233,12 @@ function Dashboard() {
                                             e.preventDefault();
                                             handleEdit(todo)
                                         }}>
-                                        Edit
+                                        Edit <MdEdit />
                                     </Button>
                                     <Button variant="outline-danger" size="sm" onClick={(e)=>{
                                         e.preventDefault();
                                         deleteTodo(todo.id)}}>
-                                        Delete
+                                        Delete <MdDelete />
                                     </Button>
                                 </Stack>
                             </div>
@@ -277,7 +250,7 @@ function Dashboard() {
 
 
 
-
+            {/* Modal for editing the todo */}
             <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Todo</Modal.Title>

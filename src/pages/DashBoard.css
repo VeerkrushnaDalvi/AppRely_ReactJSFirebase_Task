@@ -13,39 +13,9 @@
     border-radius: 20px;
 }
 
-/* .dashboard__container {
-    display: flex;
-    flex-direction: column;
-    text-align:justify;
-    background-color: hsl(0, 0%, 86%);
-    padding: 30px;
-    align-items: end;
-} */
-
-/* .dashboard__btn {
-    height: 40px;
-    width: 100px;
-    padding: 10px;
-    text-align: center;
-    align-items:flex-end;
-    justify-content: left;
-    font-size: 18px;
-    margin-top: 10px;
-    border: none;
-    color: white;
-    background-color: black;
-} */
-
-/* .dashboard div {
-    margin-top: 7px;
-}
-*/
 
 .todos {
     margin-top: 20px;
 }
 
-/* .completed {
-    text-decoration: line-through;
-} */
 

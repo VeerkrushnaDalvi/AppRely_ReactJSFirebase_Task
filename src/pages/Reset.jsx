@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { auth, sendPasswordReset } from "../firebase";
 import "./Reset.css";
+
+
 function Reset() {
     const [email, setEmail] = useState("");
     const [user, loading, error] = useAuthState(auth);
@@ -12,6 +14,8 @@ function Reset() {
         if (loading) return;
         if (user) navigate("/dashboard");
     }, [user, loading]);
+
+    // Reset component
     return (
         <div className="reset">
             <div className="reset__container">

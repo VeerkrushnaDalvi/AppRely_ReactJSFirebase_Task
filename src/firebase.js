@@ -1,26 +1,16 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// import { useAuthState } from "react-firebase-hooks/auth";
 
 // New imports for authentication
 
 import { getFirestore, query, getDocs, collection, where, addDoc } from "@firebase/firestore"
 import { GoogleAuthProvider, getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth"
 
-
 import { useNavigate } from "react-router-dom";
-// import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+
+// firebase configuration (firebase connectivity) --> all credentials 
 
 const firebaseConfig = {
-  // apiKey: "AIzaSyAxDc0_HYpI7DpQJszJeRU5tzXqNifs79E",
-  // authDomain: "hip-wharf-386618.firebaseapp.com",
-  // projectId: "hip-wharf-386618",
-  // storageBucket: "hip-wharf-386618.appspot.com",
-  // messagingSenderId: "997806278968",
-  // appId: "1:997806278968:web:8698800631283bd1c659cd",
-  // measurementId: "G-VQR296S4M3"
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_PROJECT_ID,
@@ -40,7 +30,7 @@ const googleProvider = new GoogleAuthProvider();
 
 
 
-
+// Sign in with google function snippet
 const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
@@ -69,13 +59,15 @@ const signInWithGoogle = async () => {
 };
 
 
+
+// login option with email and password if the user is registered function snippet
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
 
     alert("Login Success ")
   } catch (err) {
-    alert("Error while signin. \n May be your are not registered or may be invalid credentials \n "+ err.message)
+    alert("Error while signin. \n May be your are not registered or may be invalid credentials \n " + err.message)
     console.error(err);
   }
 };
@@ -83,6 +75,7 @@ const logInWithEmailAndPassword = async (email, password) => {
 
 
 
+// registeration function snippet
 const registerWithEmailAndPassword = async (name, email, password) => {
   try {
     await createUserWithEmailAndPassword(auth, email, password);
@@ -102,6 +95,8 @@ const registerWithEmailAndPassword = async (name, email, password) => {
 
 
 
+
+// reset password function snippet
 const sendPasswordReset = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
@@ -114,6 +109,8 @@ const sendPasswordReset = async (email) => {
 
 
 
+
+// logout function snippet
 const Logout = async (navigate) => {
   await signOut(auth);
   navigate("/")
@@ -124,5 +121,5 @@ const Logout = async (navigate) => {
 
 
 
-
+// exporting all the utilities
 export { auth, db, signInWithGoogle, logInWithEmailAndPassword, registerWithEmailAndPassword, sendPasswordReset, Logout };
