@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Login.css";
+// import { Loading } from "./Loading"
 
 
 function Login() {
@@ -11,7 +12,8 @@ function Login() {
   const [user, loading, error] = useAuthState(auth);
   const IsLoggedIn = auth.currentUser;
   const navigate = useNavigate();
-
+  
+  
   useEffect(() => {
     console.log(IsLoggedIn);
     // console.log();

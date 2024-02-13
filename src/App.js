@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Reset from "./pages/Reset";
 import Dashboard from "./pages/Dashboard";
 
+
 function App() {
   return (
     <>

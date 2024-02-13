@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+// import { Loading } from "./Loading"
+
 import {
     auth,
     registerWithEmailAndPassword,
@@ -19,12 +21,15 @@ function Register() {
         registerWithEmailAndPassword(name, email, password);
     };
     useEffect(() => {
-        if (loading) return;
+        if (loading) {
+           
+        }
         if (user) history("/");
         // if (user) Navigate('/dashboard');
     }, [user, loading]);
     return (
-        <div className="register">
+
+        < div className = "register" >
             <div className="register__container">
                 <input
                     type="text"
@@ -60,7 +65,7 @@ function Register() {
                     Already have an account? <Link to="/">Login</Link> now.
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 export default Register;

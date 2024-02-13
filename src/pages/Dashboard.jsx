@@ -6,9 +6,9 @@ import { Form, Button, Container, Nav, Navbar, InputGroup, ListGroup, Stack, Mod
 import { query, collection, getDocs, where, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { MdDelete, MdEdit } from "react-icons/md";
-import "./Dashboard.css"; 
+import { FaCircleUser } from "react-icons/fa6";
+import "./Dashboard.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 
 
@@ -31,6 +31,7 @@ function Dashboard() {
 
     useEffect(() => {
         // console.log(currentUser.uid);
+        
         setUser(currentUser);
         if (currentUser) {
             const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
@@ -47,10 +48,11 @@ function Dashboard() {
             fetchUserName(currentUser.uid);
         }
 
+
     }, []);
 
 
- 
+
     // fetch user name function to show in the navbar as logged in status
 
     const fetchUserName = async (uid) => {
@@ -88,7 +90,7 @@ function Dashboard() {
         }
     };
 
- 
+
 
     //  handle edit button function
     const handleEdit = (todo) => {
@@ -170,7 +172,7 @@ function Dashboard() {
     // todo and dashboard(navbar) react coomponent
     return (
         <>
-        {/* Navbar */}
+            {/* Navbar */}
             <Navbar expand="lg" className="bg-body-secondary">
                 <Container fluid>
                     <Navbar.Brand href="#">Todo Application</Navbar.Brand>
@@ -181,7 +183,7 @@ function Dashboard() {
                         navbarScroll
                     >
                         <InputGroup>
-                            <InputGroup.Text id="basic-addon1"> <Navbar.Text>Hey 👋, @  {user && name}</Navbar.Text>  </InputGroup.Text>
+                            <InputGroup.Text id="basic-addon1"> <Navbar.Text>Hey 👋, <FaCircleUser />  {user && name}</Navbar.Text>  </InputGroup.Text>
 
                         </InputGroup>
                     </Nav>
@@ -212,7 +214,7 @@ function Dashboard() {
                 </Form>
             </div>
 
-        
+
 
             {/* Container used to show the todo list */}
             <Container className="mt-5">
@@ -228,16 +230,17 @@ function Dashboard() {
                             <div>
                                 <Stack direction="horizontal" gap={3}>
 
-                                    <Button variant="outline-success" size="sm" className="mr-2 m-2" 
+                                    <Button variant="outline-success" size="sm" className="mr-2 m-2"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             handleEdit(todo)
                                         }}>
                                         Edit <MdEdit />
                                     </Button>
-                                    <Button variant="outline-danger" size="sm" onClick={(e)=>{
+                                    <Button variant="outline-danger" size="sm" onClick={(e) => {
                                         e.preventDefault();
-                                        deleteTodo(todo.id)}}>
+                                        deleteTodo(todo.id)
+                                    }}>
                                         Delete <MdDelete />
                                     </Button>
                                 </Stack>

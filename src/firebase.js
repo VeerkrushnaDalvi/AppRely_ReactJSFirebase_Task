@@ -65,7 +65,7 @@ const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
 
-    alert("Login Success ")
+    // alert("Login Success ")
   } catch (err) {
     alert("Error while signin. \n May be your are not registered or may be invalid credentials \n " + err.message)
     console.error(err);
