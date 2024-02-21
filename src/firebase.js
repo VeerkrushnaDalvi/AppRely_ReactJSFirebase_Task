@@ -29,7 +29,7 @@ const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
 
-
+console.log(auth)
 // Sign in with google function snippet
 const signInWithGoogle = async () => {
   try {
@@ -64,7 +64,6 @@ const signInWithGoogle = async () => {
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
-
     // alert("Login Success ")
   } catch (err) {
     alert("Error while signin. \n May be your are not registered or may be invalid credentials \n " + err.message)

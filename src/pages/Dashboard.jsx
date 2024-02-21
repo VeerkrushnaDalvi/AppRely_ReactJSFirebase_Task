@@ -15,7 +15,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Dashboard() {
 
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(auth.currentUser);
     const [name, setName] = useState("");
     const [todos, setTodos] = useState([]);
     const [todoHeading, settodoHeading] = useState('');
@@ -27,30 +27,44 @@ function Dashboard() {
         description: "",
     });
 
-    const currentUser = auth.currentUser;
+
 
     useEffect(() => {
-        // console.log(currentUser.uid);
-        
-        setUser(currentUser);
-        if (currentUser) {
-            const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
-            const q = query(userTodosCollection);
-            const fetchTodos = async () => {
-                const querySnapshot = await getDocs(q);
-                const todosData = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setTodos(todosData);
-            };
-            fetchTodos();
-            fetchUserName(currentUser.uid);
-        }
+        setUser(auth.currentUser)
+        // console.log(user)
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setUser(user);
+                fetchTodos(user);
+                // console.log(user)
+                fetchUserName(user?.uid);
+            }
+            //else {
+            //     setUser(null);
+            // }
+        });
+
+        return () => unsubscribe();
 
 
     }, []);
 
+
+
+
+    const fetchTodos = async (user) => {
+        if (user && user.email) {
+            // console.log(user)
+            const userTodosCollection = collection(db, "Todo's_Collection", user?.email, "todos");
+            const q = query(userTodosCollection);
+            const querySnapshot = await getDocs(q);
+            const todosData = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            setTodos(todosData);
+        }
+    };
 
 
     // fetch user name function to show in the navbar as logged in status
@@ -60,7 +74,7 @@ function Dashboard() {
             const q = query(collection(db, "Users"), where("uid", "==", uid));
             const doc = await getDocs(q);
             const data = doc.docs[0].data();
-            console.log(data);
+            // console.log(data);
             setName(data.name);
 
         } catch (err) {
@@ -75,7 +89,7 @@ function Dashboard() {
     // add the user created todo in the firestore collection 
     const addTodo = async () => {
         if (todoHeading.trim() !== "" && todoDesc.trim() !== "") {
-            const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
+            const userTodosCollection = collection(db, "Todo's_Collection", user.email, "todos");
             await addDoc(userTodosCollection, { heading: todoHeading, description: todoDesc });
             // setNewTodo("");
             settodoHeading("");
@@ -120,7 +134,7 @@ function Dashboard() {
             const userTodosCollection = collection(
                 db,
                 "Todo's_Collection",
-                currentUser.email,
+                user.email,
                 "todos"
             );
             const todoDocRef = doc(userTodosCollection, editedTodo.id);
@@ -156,7 +170,7 @@ function Dashboard() {
 
     // delete todo handle function
     const deleteTodo = async (todoId) => {
-        const userTodosCollection = collection(db, "Todo's_Collection", currentUser.email, "todos");
+        const userTodosCollection = collection(db, "Todo's_Collection", user.email, "todos");
         const todoDocRef = doc(userTodosCollection, todoId);
         await deleteDoc(todoDocRef);
         const q = query(userTodosCollection);
